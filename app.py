@@ -63,7 +63,7 @@ def prometheus_webhook():
     for alert in data.get('alerts'):
         status = alert.get('status')
         status_color = 'warning' if status == 'firing' else 'info'
-        status = '告警' if status == 'firing' else '已恢复'
+        status = 'Firing' if status == 'firing' else 'Resolved'
         labels = alert.get('labels', {})
         annotations = alert.get('annotations', {})
         resource_name = try_get_value(labels,
@@ -79,15 +79,15 @@ def prometheus_webhook():
         action_msg = ""
         if action:
             if runbook_url:
-                action_msg = ">处理建议: <font color=\"comment\"> {}</font> [more]({})  ".format(action, runbook_url)
+                action_msg = ">Action: <font color=\"comment\"> {}</font> [more]({})  ".format(action, runbook_url)
             else:
-                action_msg = '''>处理建议: <font color="comment">{}</font>  '''.format(action)
+                action_msg = '''>Action: <font color="comment">{}</font>  '''.format(action)
 
         msg = '''
 <font color="{_status_color}">{_status}</font>: [{_title}]({_alert_namager_url})  
->级别: <font color="comment">{_severity}</font>  
->资源: <font color="comment">{_resource}</font> [监控源]({_source})  
->描述: <font color="comment">{_message}</font> 
+>Severity <font color="comment">{_severity}</font>  
+>Resource: <font color="comment">{_resource}</font> [Source]({_source})  
+>Description: <font color="comment">{_message}</font> 
 {_action_msg}  
 \n
 '''.format(_title=labels.get("alertname", ' '), _resource=resource, _status_color=status_color, _status=status,
