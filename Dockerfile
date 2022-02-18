@@ -1,4 +1,4 @@
-FROM python:3.6.8-stretch
+FROM python:3.6.14-stretch
 
 WORKDIR /usr/src/app/
 
@@ -12,4 +12,3 @@ COPY . /usr/src/app/
 EXPOSE 8080
 
 CMD ["python", "/usr/src/app/app.py"]
-

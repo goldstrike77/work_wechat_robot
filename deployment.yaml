@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: work-wechat-robot
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: work-wechat-robot
+    app.kubernetes.io/part-of: work-wechat-robot
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,7 +27,7 @@ spec:
       serviceAccountName: work-wechat-robot
       containers:
         - name: work-wechat-robot
-          image: daozzg/work-wechat-robot
+          image: registry.cn-hangzhou.aliyuncs.com/goldstrike/work-wechat-robot:v0.12
           ports:
             - containerPort: 8080
 ---

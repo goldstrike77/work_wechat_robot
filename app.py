@@ -84,15 +84,19 @@ def prometheus_webhook():
                 action_msg = '''>Action: <font color="comment">{}</font>  '''.format(action)
 
         msg = '''
-<font color="{_status_color}">{_status}</font>: [{_title}]({_alert_namager_url})  
->Severity <font color="comment">{_severity}</font>  
->Resource: <font color="comment">{_resource}</font> [Source]({_source})  
->Description: <font color="comment">{_message}</font> 
+<font color="{_status_color}">{_status}</font>: [{_title}]({_alert_namager_url})
+>Environment: <font color="comment">{_env}</font>
+>Cluster: <font color="comment">{_cluster}</font>
+>Severity: <font color="comment">{_severity}</font>
+>Resource: <font color="comment">{_resource}</font>
+>Description: <font color="comment">{_message}</font>
 {_action_msg}  
 \n
 '''.format(_title=labels.get("alertname", ' '), _resource=resource, _status_color=status_color, _status=status,
            _message=message, _source=alert.get('generatorURL'), _action_msg=action_msg,
            _severity=try_get_value(labels, ["Severity", "severity"], "critical"),
+           _cluster=try_get_value(labels, ["cluster", "k8s_cluster"], "cluster"),
+           _env=try_get_value(labels, ["cluster_env", "environment"], "environment"),
            _alert_namager_url=ALEAT_MANAGER_URL if ALEAT_MANAGER_URL else data.get('externalURL', ' '))
 
         result = send_wechat_msg(receiver, msg)
